@@ -43,12 +43,12 @@ const createKanbanSet = ({ sectionNum, taskNum, subTaskNum }) => {
   const projectId = uuidv4();
   const kanbanSet = {
     team: {
-      _id: teamId,
+      teamId,
       tasks: [],
       subTasks: [],
     },
-    task: [],
-    subTask: [],
+    tasks: [],
+    subTasks: {},
   };
 
   (function checkParam() {
@@ -67,14 +67,17 @@ const createKanbanSet = ({ sectionNum, taskNum, subTaskNum }) => {
 
   const crasteSections = new Promise((resolve) => {
     kanbanSet.team.sections = listDummy.splice(0, sectionNum);
+    kanbanSet.team.sections.forEach((section) => {
+      kanbanSet.subTasks[section] = [];
+    });
     return resolve();
   });
 
-  const createTasks = function() {
+  const createTasks = () => {
     for (let i = 0; i < taskNum; i += 1) {
       const taskId = uuidv4();
       const task = {
-        _id: taskId,
+        taskId,
         assignedTeams: [teamId],
         // TODO: need to be added
         referenceId: null,
@@ -86,7 +89,7 @@ const createKanbanSet = ({ sectionNum, taskNum, subTaskNum }) => {
     return null;
   };
 
-  const createSubTasks = function () {
+  const createSubTasks = () => {
     for (let i = 0; i < subTaskNum; i += 1) {
       const subTaskId = uuidv4();
       const newDate =
@@ -95,12 +98,13 @@ const createKanbanSet = ({ sectionNum, taskNum, subTaskNum }) => {
         new Date(newDate).setDate(Math.floor(Math.random() * 7));
       const task =
         kanbanSet.team.tasks[Math.floor(Math.random() * taskNum)];
-      const taskId = task._id; //eslint-disable-line
+      const taskId = task.taskId; //eslint-disable-line
+      const section = kanbanSet.team.sections[Math.floor(Math.random() * sectionNum)];
       const subTask = {
-        _id: subTaskId,
+        subTaskId,
         teamId,
         taskId,
-        section: kanbanSet.team.sections[Math.floor(Math.random() * sectionNum)],
+        section,
         // TODO: need to added
         assignees: null,
         title: loremWord('title', 2, 7),
@@ -116,9 +120,8 @@ const createKanbanSet = ({ sectionNum, taskNum, subTaskNum }) => {
           working: getWorking(assignedDate, kanbanSet.team.sections),
         },
       };
-
       kanbanSet.team.subTasks.push(subTaskId);
-      kanbanSet.subTask.push(subTask);
+      kanbanSet.subTasks[section].push(subTask);
     }
     return kanbanSet;
   };

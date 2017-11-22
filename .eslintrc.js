@@ -37,7 +37,7 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
     'linebreak-style': 0,
     "no-param-reassign": ["error", { "props": true, "ignorePropertyModificationsFor": ["state"] }],
-    "no-shadow": ["error", { "allow": ["state"] } ],
+    "no-shadow": ["error", { "allow": ["state", "event"] } ],
     "quote-props": ["error", "as-needed", { "keywords": true, "unnecessary": false }]
 
   }
