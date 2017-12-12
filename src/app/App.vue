@@ -9,8 +9,22 @@
 <script>
 export default {
   name: 'app',
+  created() {
+    return this.$store.dispatch('taskBoard/initKanban', {
+      sectionNum: 4,
+      taskNum: 10,
+      subTaskNum: 20 });
+  },
 };
 </script>
 
-<style>
+<style scoped>
+
+  #app {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    margin: 0px;
+    background: #fafafa;
+  }
 </style>

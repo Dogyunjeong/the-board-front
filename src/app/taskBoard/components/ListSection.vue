@@ -1,39 +1,44 @@
 <template>
   <div class="section">
     <div class="section-wrapper">
-      {{ section }}
-      <transition-group name="slide" mode="out-in">
-        <app-sub-task-card
-            v-for="(subTask, idx) in  subTasks"
-            :key="idx"
-            :idx="idx"
+      {{ section }} {{ subTasks.length }}
+      <div class="section-body"
+          :section="section">
+        <app-drag-and-drop
+          v-model="subTasks">
+          <app-sub-task-card
+            v-for="(subTask, index) in  subTasks"
+            :key="index"
+            :index="index"
             :subTask="subTask"></app-sub-task-card>
-      </transition-group>
-
+        </app-drag-and-drop>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+  import DragAndDrop from '@/lib/dragAndDrop/DragAndDrop';
   import SubTaskCard from './SubTaskCard';
 
   export default {
     props: ['section'],
-    data() {
-      return {
-        dummyId: 'dummy-sub-task',
-      };
-    },
     computed: {
-      subTasks() {
-        console.log(this.section);
-        return this.$store.getters.subTasksBySections(this.section);
+      subTasks: {
+        get() {
+          return this.$store.getters['taskBoard/subTasksBySection'](this.section);
+        },
+        set(value) {
+          console.log('update value', value);
+          console.log(this.section);
+          this.$store.dispatch('taskBoard/updateSubTaskBySection', { section: this.section, subTasks: value });
+        },
       },
     },
     components: {
       appSubTaskCard: SubTaskCard,
+      appDragAndDrop: DragAndDrop,
     },
-    methods: {},
   };
 </script>
 
@@ -51,34 +56,4 @@
     border-radius: 10px;
   }
 
-  .slide-leave-active {
-    animation: slide-out 1s ease-out forwards;
-    transition: opacity 1s ease;
-    opacity: 0;
-  }
-  .slide-leave {
-      opacity: 1;
-      transform: translateX(0);
-  }
-
-  .slide-enter-active {
-      animation: slide-in 1s ease-out forwards;
-  }
-
-  @keyframes slide-in {
-      0% {
-          transform: translateY(-30px);
-      }
-      100% {
-          transform: translateY(0);
-      }
-  }
-  @keyframes slide-out {
-      0% {
-          transform: translateY(0);
-      }
-      100% {
-          transform: translateY(-30px);
-      }
-  }
 </style>

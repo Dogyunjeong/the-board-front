@@ -1,19 +1,21 @@
 <template>
   <div class="sub-task-wrapper"
-      droppable="true"
-      @dragover="dragOver"
-      @dragenter.prevent="dragEnter"
-      @dragleave="dragLeave"
-      @drop="dropOn"
       :style="{opacity}"
-      :index="idx">
-    <div class="sub-task"
+      :index="index">
+    <!-- <div class="sub-task"
         draggable="true"
         @dragstart="dragStart"
         @dragend="dragEnd"
-        :id="subTaskId">
+        @dragover.prevent="dragOver"
+        @dragenter.prevent="dragEnter"
+        @dragleave="dragLeave"
+        @drop="dropOn"
+        :id="subTask.subTaskId"> -->
+    <div class="sub-task"
+        :id="subTask.subTaskId"
+        draggable="true">
       <div class="header">
-        <p draggable="false" droppable="false">{{ title }}</p>
+        <p draggable="false" droppable="false">{{ subTask.title }}</p>
       </div>
       <div class="body">
         <div class="status-panel">
@@ -23,7 +25,7 @@
           <div class="status">4</div>
         </div>
         <div class="content-panel">
-          <p draggable="false"  droppable="false">{{ content }}</p>
+          <p draggable="false"  droppable="false">{{ subTask.content }} // {{ subTask.section }}</p>
         </div>
       </div>
     </div>
@@ -36,83 +38,22 @@
       subTask: {
         type: Object,
       },
-      idx: {
+      index: {
         type: Number,
       },
     },
     data() {
       return {
-        ...this.subTask,
         opacity: 1,
-        animate: false,
       };
-    },
-    methods: {
-      insertElem(dragItem) {
-        setTimeout(() => {
-          this.animate = false;
-        }, 100);
-        // dragItem.elem.animate({ height: ['0px',
-        // ''.concat(this.$el.getClientRects()[0].height, 'px')] }, 100);
-        dragItem.elem.animate({
-          translateY: ['-'.concat(this.$el.getClientRects()[0].height, 'px'), '0px'],
-        }, 500);
-        if (dragItem.elem === this.$el.nextSibling) {
-          return this.$el.parentNode.insertBefore(dragItem.elem, this.$el);
-        }
-        if (dragItem.elem !== this.$el) {
-          return this.$el.parentNode.insertBefore(dragItem.elem, this.$el.nextSibling);
-        }
-        return null;
-      },
-      dragStart(event) {
-        console.log('dragStart');
-        const clone = this.$el.cloneNode(true);
-
-        clone.style.opacity = 0.2;
-        this.opacity = 0.2;
-
-        event.dataTransfer.setData('data', { section: this.section, index: this.idx });
-
-        this.$store.dispatch('updateDragElem', { section: this.section, elem: this.$el });
-        this.$store.dispatch('updateClonedElem', { section: this.section, elem: clone, index: this.idx });
-      },
-      dragOver() {
-        console.log('dragOver');
-        console.log(this.idx);
-        console.log(this.$el);
-        console.log(this.$el.parentNode.childNodes[this.idx]);
-        if (!this.animate) {
-          this.animate = true;
-          const dragItem = this.$store.getters.clonedElem;
-          this.insertElem(dragItem);
-        }
-        console.log(this.$el.nextSibling);
-        return null;
-      },
-      dragEnd() {
-        console.log('dragEnd');
-      },
-      dragEnter() {
-        return false;
-      },
-      dragLeave() {
-        console.log('dragLeave');
-      },
-      dropOn(event) {
-        console.log('dropOn');
-        console.log(event.dataTransfer.getData('text'));
-      },
     },
   };
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 
   .sub-task-wrapper{
     padding: 10px;
-    animation-name: slide;
-    animation-duration: 0.2s;
   }
   .sub-task {
     display: flex;

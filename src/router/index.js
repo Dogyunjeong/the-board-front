@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Kanban from '../app/taskBoard/TaskBoard';
+
+import TeamBoard from '../app/teamBoard/TeamBoard';
+import TaskBoard from '../app/taskBoard/TaskBoard';
 
 Vue.use(Router);
 
@@ -9,8 +11,13 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Kanban',
-      component: Kanban,
+      name: 'TeamBoard',
+      component: TeamBoard,
+    },
+    {
+      path: '/task',
+      name: 'TaskBoard',
+      component: TaskBoard,
     },
   ],
 });

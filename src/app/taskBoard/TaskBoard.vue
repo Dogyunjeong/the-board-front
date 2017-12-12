@@ -1,10 +1,11 @@
 <template>
   <div>
-    <div class="task-board">
-      <app-list-section
+    <div class="task-board"
+        droppable="true">
+      <app-task-list-section
           v-for="(section, index) in sections"
           :key="index"
-          :section="section"></app-list-section>
+          :section="section"></app-task-list-section>
     </div>
   </div>
 </template>
@@ -21,19 +22,12 @@
     },
     computed: {
       sections() {
-        return this.$store.getters.sections;
+        return this.$store.getters['taskBoard/sections'];
       },
     },
     components: {
-      appListSection: ListSection,
+      appTaskListSection: ListSection,
     },
-    created() {
-      return this.$store.dispatch('initKanban', {
-        sectionNum: 4,
-        taskNum: 10,
-        subTaskNum: 20 });
-    },
-    methods: {},
   };
 </script>
 
