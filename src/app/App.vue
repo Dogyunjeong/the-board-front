@@ -11,7 +11,7 @@ export default {
   name: 'app',
   created() {
     return this.$store.dispatch('taskBoard/initKanban', {
-      sectionNum: 4,
+      sectionNum: 6,
       taskNum: 10,
       subTaskNum: 20 });
   },
@@ -19,7 +19,6 @@ export default {
 </script>
 
 <style scoped>
-
   #app {
     display: flex;
     height: 100%;

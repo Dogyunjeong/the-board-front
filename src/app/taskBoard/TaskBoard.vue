@@ -35,8 +35,8 @@
   .task-board {
     display: flex;
     flex-wrap: nowrap;
-    overflow: auto;
-    height: 100vh;
+    overflow: unset;
+    min-height: 100vh;
     background-color: #A5D6A7;
   }
 </style>

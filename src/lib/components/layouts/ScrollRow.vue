@@ -1,10 +1,7 @@
 <template>
-  <div>
     <div class="scroll-row">
       <slot></slot>
     </div>
-  </div>
-
 </template>
 
 <script>

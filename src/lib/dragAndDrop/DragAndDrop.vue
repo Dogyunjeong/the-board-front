@@ -39,7 +39,7 @@
         let target = node;
         while (!target.__vue__) {  // eslint-disable-line
           target = target.parentNode;
-        }  // eslint-disable-line
+        }
         return target.__vue__;  // eslint-disable-line
       },
       dragStart(event) {
@@ -53,17 +53,18 @@
         store.dragEl = dragEl;
         store.height = dragEl.getClientRects()[0].height;
       },
+      /**
+       * 1. check the group of clone and target
+       * When it is matched do the drag and drop
+       *
+       */
       dragOver(event) {
         const clone = store.clone;
         const dragEl = store.dragEl;
         const targetVm = this.findVueInstance(event.target);
         const targetEl = targetVm.$el;
         const parentNode = targetEl.parentNode;
-        // console.log('clone: ', clone);
-        // console.log('dragEl: ', dragEl);
-        // console.log('targetEl: ', targetEl);
-        // console.log('parentNode: ', parentNode);
-        // console.log('targetEl.nextSibling: ', targetEl.nextSibling);
+        console.log('dragOver parentNode.__vue__: ', parentNode.__vue__); // eslint-disable-line
         if (!clone.animated && clone !== event.target && !clone.contains(event.target)) {
           if (event.target.className === 'default-drop' || (clone.nextSibling && clone.nextSibling.className === 'default-drop')) {
             if (!targetEl.contains(clone)) {
@@ -98,6 +99,7 @@
         const dropVue = this.findVueInstance(clone);
 
         clone.parentNode.removeChild(clone);
+
         const moveElem = dragVue.$parent.value.splice(dragVue.index, 1)[0];
         dragVue.$emit('input', dragVue.value);
 
@@ -109,6 +111,10 @@
 </script>
 
 <style scoped>
+  .drag-section {
+    width: 100%;
+    height: 100%
+  }
   .default-drop {
     height: 5vh;
   }

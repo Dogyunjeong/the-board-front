@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 import taskBoard from '@/app/taskBoard/vuex/taskBoard';
-import teamBoard from '@/app/teamBoard/vuex/teamBoard';
+import teamBoardWithTaskNav from '@/app/teamBoardWithTaskNav/vuex/teamBoardWithTaskNav';
 
 Vue.use(Vuex);
 
@@ -12,9 +12,9 @@ export default new Vuex.Store({
       namespaced: true,
       ...taskBoard,
     },
-    teamBoard: {
+    teamBoardWithTaskNav: {
       namespaced: true,
-      ...teamBoard,
+      ...teamBoardWithTaskNav,
     },
   },
 });

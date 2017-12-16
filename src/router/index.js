@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import TeamBoard from '../app/teamBoard/TeamBoard';
-import TaskBoard from '../app/taskBoard/TaskBoard';
+import TeamBoardWithTaskNav from '@/app/teamBoardWithTaskNav/TeamBoardWithTaskNav';
+import TaskBoard from '@/app/taskBoard/TaskBoard';
 
 Vue.use(Router);
 
@@ -11,8 +11,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'TeamBoard',
-      component: TeamBoard,
+      name: 'TeamBoardWithTaskNav',
+      component: TeamBoardWithTaskNav,
     },
     {
       path: '/task',

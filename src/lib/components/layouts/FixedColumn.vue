@@ -1,22 +1,19 @@
 <template>
-  <div>
-    <div class="row">
-      <slot></slot>
-    </div>
+  <div class="fixed-column">
+    <slot></slot>
   </div>
-
 </template>
 
 <script>
   export default {
+
   };
 </script>
 
-<style>
-  .row {
+<style lang="scss">
+  .fixed-column {
+    min-width: 200px;
     display: flex;
     flex-wrap: wrap;
-    width: 100%;
   }
-
 </style>

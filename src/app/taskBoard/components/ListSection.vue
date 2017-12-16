@@ -18,7 +18,6 @@
 </template>
 
 <script>
-  import DragAndDrop from '@/lib/dragAndDrop/DragAndDrop';
   import SubTaskCard from './SubTaskCard';
 
   export default {
@@ -37,7 +36,6 @@
     },
     components: {
       appSubTaskCard: SubTaskCard,
-      appDragAndDrop: DragAndDrop,
     },
   };
 </script>

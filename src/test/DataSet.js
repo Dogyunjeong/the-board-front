@@ -4,9 +4,10 @@ import loremIpsum from 'lorem-ipsum';
 const getRandomMultiElem = (arr) => {
   const start = Math.floor(Math.random() * arr.length);
   const end = Math.floor(start + (Math.random() * (arr.length - start)));
-  console.log('satrt: ', start, '/ end: ', end);
   return arr.slice(start, end);
 };
+
+// const getRandomElem = arr => arr[Math.floor(Math.random() * arr.length)];
 
 const loremWord = (name = '', min, max) => {
   const lorem = name.concat(' ', loremIpsum({
@@ -18,6 +19,19 @@ const loremWord = (name = '', min, max) => {
   return lorem;
 };
 
+const listDummy = [
+  'todo',
+  'pending',
+  'postPond',
+  'develop',
+  'pull-request',
+  'deploy',
+  'waiting-collabo',
+  'test',
+];
+
+const createSections = sectionNum => listDummy.splice(0, sectionNum);
+
 export default class DataSet {
 
   static createReference(referenceNum) {
@@ -27,7 +41,9 @@ export default class DataSet {
     }
     return arr;
   }
-  static createTeams(teamNum) {
+
+  static createSections = createSections;
+  static createTeams(teamNum, sectionNum = Math.floor((Math.random() * 6) + 1)) {
     const dummyTeam = ['개발', '디자인', '기획', '테스트'];
     const teams = [];
     let i = 0;
@@ -38,31 +54,43 @@ export default class DataSet {
       );
 
       if (teams.filter(elem => elem.name === teamName).length === 0) {
-        teams.push({ name: teamName, id: uuidv4() });
+        const sections = createSections(sectionNum);
+        teams.push({ name: teamName, sections, id: uuidv4() });
         i += 1;
       }
-      console.log('while working');
     }
     return teams;
   }
-  static createTasks(taskNum, { teamIds, referenceId }) {
+
+  static createTasks(taskNum) {
     const taskArr = [];
     for (let i = 0; i < taskNum; i += 1) {
       const taskId = uuidv4();
-      const assignedTeams = getRandomMultiElem(teamIds);
-      const assigned = [];
-      assignedTeams.forEach((elem) => {
-        const max = Math.floor((Math.random() * 100) + 1);
-        const current = Math.floor(Math.random() * max);
-        assigned.push({ teamId: elem, subTaskProcess: { current, max } });
-      });
       taskArr.push({
         id: taskId,
         title: loremWord('', 1, 5),
-        referenceId,
-        assignedTeams: assigned,
       });
     }
+    return taskArr;
+  }
+
+  static createTasksForTeamBoard(taskNum, { teamIds, referenceId }) {
+    const taskArr = DataSet.createTasks(taskNum);
+    taskArr.forEach((elem) => {
+      const task = elem;
+      const assignedTeams = getRandomMultiElem(teamIds);
+      const assigned = {};
+      assignedTeams.forEach((teamId) => {
+        const max = Math.floor((Math.random() * 100) + 1);
+        const current = Math.floor(Math.random() * max);
+        assigned[teamId] = {
+          subTaskProcess: { current, max },
+          section: ['todo', 'doing', 'done'][Math.floor(Math.random() * 3)],
+        };
+      });
+      task.referenceId = referenceId;
+      task.assignedTeams = assigned;
+    });
     return taskArr;
   }
 }
