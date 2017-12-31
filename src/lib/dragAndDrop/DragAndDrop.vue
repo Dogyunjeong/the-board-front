@@ -3,7 +3,8 @@
       class="drag-section"
       @dragstart="dragStart"
       @dragover="dragOver"
-      @dragend="dragEnd">
+      @dragend="dragEnd"
+      :dndGroup="dndGroup">
     <slot></slot>
     <div
       class="default-drop"
@@ -17,10 +18,16 @@
   import store from './store';
   /**
    * 1. Array Data를 감싼다.
-   * 2. m
+   * 2. Value는 v-model로 연결되어 있는 값.
+   * 3. It can be moveable in only same group.
   */
   export default {
-    props: ['value'],
+    props: ['value', 'group'],
+    data() {
+      return {
+        dndGroup: this.group ? this.group : 'dnd_default',  // eslint-disable-line
+      };
+    },
     methods: {
       insertElem(parentNode, insertNode, refNode) {
         const height = store.height;
@@ -35,12 +42,75 @@
         }
         return null;
       },
-      findVueInstance(node) {
+      findFirstDndGroup(node) {
         let target = node;
-        while (!target.__vue__) {  // eslint-disable-line
+        let group;
+        while (target) {
+          if (target.__vue__) { // eslint-disable-line
+            if (target.__vue__.dndGroup) { // eslint-disable-line
+              group = target.__vue__.dndGroup; // eslint-disable-line
+              break;
+            }
+          }
           target = target.parentNode;
         }
-        return target.__vue__;  // eslint-disable-line
+        return group;
+      },
+      findMatchedDnd(dragEl, targetNode) {
+        const draggedGroup = this.findFirstDndGroup(dragEl);
+        let targetVm = this.findVueInstance(targetNode);
+        if (!targetVm) {
+          return {
+            dragSection: null,
+            targetVm: null,
+          };
+        }
+        let dragSection = targetVm;
+        while (dragSection) {
+          if (dragSection.dndGroup === draggedGroup) { // eslint-disable-line
+            break;
+          }
+          targetVm = dragSection;
+          dragSection = dragSection.$parent;
+        }
+        return { dragSection, targetVm }; // eslint-disable-line
+      },
+      findIndex(dragEl, clone) {
+        let refIndex;
+        const { dragSection } = this.findMatchedDnd(dragEl, clone);
+        let vueInstance = this.findVueInstance(clone.nextSibling);
+        if (vueInstance && vueInstance.$parent === dragSection) {
+          refIndex = vueInstance.index;
+        } else if (clone.previousSibling) {
+          vueInstance = this.findVueInstance(clone.previousSibling);
+          refIndex = vueInstance.index + 1;
+        }
+        if (!refIndex || !vueInstance) {
+          refIndex = 0;
+        }
+        return refIndex;
+      },
+      findDndVueInstance(node) {
+        let targetVm = this.findVueInstance(node);
+        let dragSection = targetVm;
+        while (dragSection) {
+          if (dragSection.dndGroup) {
+            break;
+          }
+          targetVm = dragSection;
+          dragSection = targetVm.$parent;
+        }
+        return { dragSection, targetVm };
+      },
+      findVueInstance(node) {
+        let target = node;
+        while (target) {
+          if (target.__vue__) {  // eslint-disable-line
+            break;
+          }
+          target = target.parentNode;
+        }
+        return target ? target.__vue__ : null;  // eslint-disable-line
       },
       dragStart(event) {
         const dragVm = this.findVueInstance(event.target);
@@ -61,10 +131,11 @@
       dragOver(event) {
         const clone = store.clone;
         const dragEl = store.dragEl;
-        const targetVm = this.findVueInstance(event.target);
+        const { dragSection, targetVm } = this.findMatchedDnd(dragEl, event.target);
+        if (!dragSection) return;
+        event.stopPropagation();
         const targetEl = targetVm.$el;
         const parentNode = targetEl.parentNode;
-        console.log('dragOver parentNode.__vue__: ', parentNode.__vue__); // eslint-disable-line
         if (!clone.animated && clone !== event.target && !clone.contains(event.target)) {
           if (event.target.className === 'default-drop' || (clone.nextSibling && clone.nextSibling.className === 'default-drop')) {
             if (!targetEl.contains(clone)) {
@@ -79,31 +150,26 @@
           }
           dragEl.style.display = 'none';
         }
-        return null;
       },
-      dragEnd() {
+      async dragEnd(event) {
         const clone = store.clone;
-        let refIndex;
-        if (clone.nextSibling) {
-          refIndex = this.findVueInstance(clone.nextSibling).index;
-        } else if (clone.previousSibling) {
-          refIndex = this.findVueInstance(clone.previousSibling).index;
-        } else {
-          refIndex = 0;
-        }
-
         const dragEl = store.dragEl;
+        const dragVue = await this.findVueInstance(dragEl);
+        const refIndex = await this.findIndex(dragEl, clone);
+        const { dragSection } = await this.findMatchedDnd(dragEl, clone.parentNode);
+        const dropVue = dragSection;
+
         dragEl.style.display = '';
         dragEl.style.opacity = 1;
-        const dragVue = this.findVueInstance(dragEl);
-        const dropVue = this.findVueInstance(clone);
 
-        clone.parentNode.removeChild(clone);
+        if (clone.parentNode) clone.parentNode.removeChild(clone);
+        if (!dragSection) return;
 
-        const moveElem = dragVue.$parent.value.splice(dragVue.index, 1)[0];
-        dragVue.$emit('input', dragVue.value);
-
+        event.stopPropagation();
+        const moveElem = dragVue.$parent.value.slice(dragVue.index, dragVue.index + 1)[0];
         dropVue.value.splice(refIndex, 0, moveElem);
+        dragVue.$parent.value.splice(dragVue.index, 1);
+        dragVue.$emit('input', dragVue.$parent.value);
         dropVue.$emit('input', dropVue.value);
       },
     },
@@ -113,7 +179,9 @@
 <style scoped>
   .drag-section {
     width: 100%;
-    height: 100%
+    height: 100%;
+    display: inherit;
+    flex-direction: inherit;
   }
   .default-drop {
     height: 5vh;

@@ -1,14 +1,15 @@
 <template>
-  <div
-      class="row plain-task"
-      draggable="true">
-    <p class="title">{{ task.title }}</p>
+  <div class="row">
+    <div
+        class="row plain-task">
+      <p class="title">{{ task.title }}</p>
+    </div>
   </div>
 </template>
 
 <script>
   export default {
-    props: ['task'],
+    props: ['task', 'index'],
   };
 </script>
 

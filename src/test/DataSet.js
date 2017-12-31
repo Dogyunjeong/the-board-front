@@ -4,7 +4,7 @@ import loremIpsum from 'lorem-ipsum';
 const getRandomMultiElem = (arr) => {
   const start = Math.floor(Math.random() * arr.length);
   const end = Math.floor(start + (Math.random() * (arr.length - start)));
-  return arr.slice(start, end);
+  return arr.slice(start, end + 1);
 };
 
 // const getRandomElem = arr => arr[Math.floor(Math.random() * arr.length)];
@@ -30,10 +30,11 @@ const listDummy = [
   'test',
 ];
 
-const createSections = sectionNum => listDummy.splice(0, sectionNum);
 
 export default class DataSet {
-
+  static createId() {
+    return uuidv4();
+  }
   static createReference(referenceNum) {
     const arr = [];
     for (let i = 0; i < referenceNum; i += 1) {
@@ -42,7 +43,6 @@ export default class DataSet {
     return arr;
   }
 
-  static createSections = createSections;
   static createTeams(teamNum, sectionNum = Math.floor((Math.random() * 6) + 1)) {
     const dummyTeam = ['개발', '디자인', '기획', '테스트'];
     const teams = [];
@@ -54,7 +54,7 @@ export default class DataSet {
       );
 
       if (teams.filter(elem => elem.name === teamName).length === 0) {
-        const sections = createSections(sectionNum);
+        const sections = listDummy.splice(0, sectionNum);
         teams.push({ name: teamName, sections, id: uuidv4() });
         i += 1;
       }
@@ -64,11 +64,15 @@ export default class DataSet {
 
   static createTasks(taskNum) {
     const taskArr = [];
+    const startDate = new Date(Date.now() - Math.floor((Math.random() * 14) * 1000 * 60 * 60 * 24));
     for (let i = 0; i < taskNum; i += 1) {
       const taskId = uuidv4();
       taskArr.push({
         id: taskId,
         title: loremWord('', 1, 5),
+        start: startDate,
+        end: new Date(startDate.getTime() + Math.floor((Math.random() * 14) * 1000 * 60 * 60 * 24)),
+        detail: loremWord('', 5, 20),
       });
     }
     return taskArr;
@@ -81,10 +85,10 @@ export default class DataSet {
       const assignedTeams = getRandomMultiElem(teamIds);
       const assigned = {};
       assignedTeams.forEach((teamId) => {
-        const max = Math.floor((Math.random() * 100) + 1);
-        const current = Math.floor(Math.random() * max);
+        const total = Math.floor((Math.random() * 100) + 1);
+        const current = Math.floor(Math.random() * total);
         assigned[teamId] = {
-          subTaskProcess: { current, max },
+          subTaskProcess: { current, total },
           section: ['todo', 'doing', 'done'][Math.floor(Math.random() * 3)],
         };
       });

@@ -1,12 +1,14 @@
 <template>
   <div class="layout">
     <app-drag-and-drop
-        v-model="teamTasksBySection">
+        v-model="teamTasksBySection"
+        :group="teamId">
       <tb-plain-task
-          v-for="(task, index) in teamTasksBySection"
+          v-for="(task, idx) in teamTasksBySection"
           :key="task.id"
-          :index="index"
-          :task="task">
+          :index="idx"
+          :task="task"
+          draggable="true">
       </tb-plain-task>
     </app-drag-and-drop>
   </div>

@@ -1,8 +1,8 @@
 import DataSet from './DataSet';
 
-export default {
+export default class extends DataSet {
   // eslint-disable-next-line
-  createTeamBoardData({ teamNum, referenceNum, taskNum }) {
+  static createTeamBoardData({ teamNum, referenceNum, taskNum }) {
     const dataSet = {};
     dataSet.references = DataSet.createReference(referenceNum);
     dataSet.teams = DataSet.createTeams(teamNum);
@@ -30,5 +30,5 @@ export default {
       });
     });
     return dataSet;
-  },
-};
+  }
+}

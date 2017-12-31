@@ -6,17 +6,13 @@ import App from '@/app/App';
 import router from '@/router';
 import store from '@/vuex/vuex';
 
-import '@/styles/layout.scss';
-
 import DragAndDrop from '@/lib/dragAndDrop/DragAndDrop';
-import ScrollRow from '@/lib/components/layouts/ScrollRow';
 import FixedColumn from '@/lib/components/layouts/FixedColumn';
 import Layout from '@/lib/components/layouts/Layout';
 import Row from '@/lib/components/layouts/Row';
 import LeftNavLayout from '@/lib/components/navigator/LeftNavLayout';
 
 
-Vue.component('app-scroll-row', ScrollRow);
 Vue.component('app-fixed-column', FixedColumn);
 Vue.component('app-layout', Layout);
 Vue.component('app-row', Row);
