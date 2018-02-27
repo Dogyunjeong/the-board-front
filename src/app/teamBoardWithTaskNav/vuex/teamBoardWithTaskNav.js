@@ -1,3 +1,5 @@
+/* eslint-disable object-curly-newline */
+
 import createData from '@/test/createData';
 
 
@@ -61,7 +63,7 @@ const actions = {
     // after server
     commit('ADD_TEAM', { id, name, sections });
   },
-  addTask({ commit }, { title, detail, assignedTeamIds, start, end }) {
+  addTask({ commit }, { title, detail, assignedTeamIds, start, end }) { // eslint-disable-line
     // TODO: server request and get respons then working.
     // TODO: error handling
 
@@ -76,7 +78,14 @@ const actions = {
         section: 'todo',
       };
     });
-    const task = { id, title, detail, assignedTeams, start, end };
+    const task = {
+      id,
+      title,
+      detail,
+      assignedTeams,
+      start,
+      end,
+    };
 
     // after server response
     commit('ADD_TASK', { task, teamIds, section: 'todo' });

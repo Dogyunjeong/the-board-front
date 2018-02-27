@@ -20,10 +20,17 @@ export default {
     appHeader: Header,
   },
   created() {
-    return this.$store.dispatch('taskBoard/initKanban', {
-      sectionNum: 6,
-      taskNum: 10,
-      subTaskNum: 20 });
+    console.log('created');
+    console.log(this.$io);
+    this.$socket.emit('test', 'form app.vue');
+    return this.$store.dispatch(
+      'taskBoard/initKanban',
+      {
+        sectionNum: 6,
+        taskNum: 10,
+        subTaskNum: 20,
+      },
+    );
   },
 };
 </script>

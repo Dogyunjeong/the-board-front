@@ -66,7 +66,7 @@
     props: ['closePanel', 'teams'],
     data() {
       return {
-        assignTeams: {},  // kew will be team Id during creating, value will be selected value
+        assignTeams: {}, // kew will be team Id during creating, value will be selected value
         title: '',
         detail: '',
         start: null,

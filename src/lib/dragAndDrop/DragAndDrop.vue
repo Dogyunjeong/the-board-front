@@ -30,7 +30,7 @@
     },
     methods: {
       insertElem(parentNode, insertNode, refNode) {
-        const height = store.height;
+        const { height } = store;
         setTimeout(() => {
           insertNode.animated = false; // eslint-disable-line
         }, 200);
@@ -129,13 +129,12 @@
        *
        */
       dragOver(event) {
-        const clone = store.clone;
-        const dragEl = store.dragEl;
+        const { clone, dragEl } = store;
         const { dragSection, targetVm } = this.findMatchedDnd(dragEl, event.target);
         if (!dragSection) return;
         event.stopPropagation();
         const targetEl = targetVm.$el;
-        const parentNode = targetEl.parentNode;
+        const { parentNode } = targetEl;
         if (!clone.animated && clone !== event.target && !clone.contains(event.target)) {
           if (event.target.className === 'default-drop' || (clone.nextSibling && clone.nextSibling.className === 'default-drop')) {
             if (!targetEl.contains(clone)) {
@@ -152,8 +151,7 @@
         }
       },
       async dragEnd(event) {
-        const clone = store.clone;
-        const dragEl = store.dragEl;
+        const { clone, dragEl } = store;
         const dragVue = await this.findVueInstance(dragEl);
         const refIndex = await this.findIndex(dragEl, clone);
         const { dragSection } = await this.findMatchedDnd(dragEl, clone.parentNode);

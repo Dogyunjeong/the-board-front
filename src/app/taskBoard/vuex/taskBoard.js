@@ -1,3 +1,5 @@
+/* eslint-disable object-curly-newline */
+
 // import { Packet } from "_debugger";
 import createKanbanSet from '../../../test/createKanbanSet';
 
