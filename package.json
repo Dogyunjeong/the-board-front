@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "bootstrap": "^3.3.7",
+    "socket.io-client": "^2.0.4",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vuedraggable": "^2.15.0",
@@ -42,8 +43,8 @@
     "cross-env": "^5.0.1",
     "cross-spawn": "^5.0.1",
     "css-loader": "^0.28.0",
-    "eslint": "^3.19.0",
-    "eslint-config-airbnb-base": "^11.3.0",
+    "eslint": "^4.9.0",
+    "eslint-config-airbnb-base": "^12.1.0",
     "eslint-friendly-formatter": "^3.0.0",
     "eslint-import-resolver-webpack": "^0.8.3",
     "eslint-loader": "^1.7.1",

@@ -41,17 +41,5 @@
 </script>
 
 <style scoped>
-  .section {
-    width: 250px;
-    height: 100%;
-    margin: 0px 5px;
-    display: inline-block;
-  }
-
-  .section-wrapper {
-    background-color: #f0f0f0;
-    padding-bottom: 10px;
-    border-radius: 10px;
-  }
 
 </style>

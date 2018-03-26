@@ -15,6 +15,11 @@ export default new Router({
       component: TeamBoardWithTaskNav,
     },
     {
+      path: '/team',
+      name: 'TeamBoardWithTaskNav',
+      component: TeamBoardWithTaskNav,
+    },
+    {
       path: '/task',
       name: 'TaskBoard',
       component: TaskBoard,

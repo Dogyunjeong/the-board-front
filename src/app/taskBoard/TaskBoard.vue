@@ -2,10 +2,23 @@
   <div>
     <div class="task-board"
         droppable="true">
-      <app-task-list-section
+      <div
+          id="add-sub-task-button"
+          class="floating-btn"
+          @click="onCreateSection = !onCreateSection">add Sub Task</div>
+      <task-list-section
           v-for="(section, index) in sections"
           :key="index"
-          :section="section"></app-task-list-section>
+          :section="section"></task-list-section>
+      <template>
+        <div class="section">
+          <div class="section-wrapper">
+            <label for="section-name">Add section</label>
+            <input type="text">
+            <button></button>
+          </div>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -25,8 +38,11 @@
         return this.$store.getters['taskBoard/sections'];
       },
     },
+    methods: {
+
+    },
     components: {
-      appTaskListSection: ListSection,
+      taskListSection: ListSection,
     },
   };
 </script>

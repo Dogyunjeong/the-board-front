@@ -13,7 +13,7 @@
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    text-align: center;
+    height: max-content;
   }
 
 </style>

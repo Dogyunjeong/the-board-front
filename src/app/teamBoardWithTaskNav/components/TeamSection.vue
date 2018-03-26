@@ -1,68 +1,95 @@
 <template>
-  <app-row
-      class="board-section">
-    <app-fixed-column
-        class="team-column"
-        v-for="team in teams"
-        :key="team.id">
-      <app-row
-          class="section-wrapper box-shadow"
-          v-for="section in teamSections(team.id)"
-          :key="section">
-        <app-row
-            class="section-title">
-            {{ section }}
-        </app-row>
-        <tb-task-list :teamId="team.id" :section="section"></tb-task-list>
+  <div class="layout">
+    <app-row
+        class="team-title">
+      <app-fixed-column
+          v-for="team in teams"
+          :key="team.id"
+          :style="{ display: 'inline-block' }">
+        Team: {{ team.name }}
+      </app-fixed-column>
+    </app-row>
+    <app-row
+        v-if="task">
+      <app-row>
+        {{ task.assignedTeams}}
 
       </app-row>
-    </app-fixed-column>
-  </app-row>
+      <app-row>
+        <app-fixed-column
+          v-for="team in teams"
+          :key="team.id"
+          class="team-task line-between-column">
+          <div v-if="isAssigned(team.id)" class="task-status">
+            {{ task.assignedTeams[team.id]}}
+          </div>
+        </app-fixed-column>
+      </app-row>
+      <!-- <tb-team-section
+        :task="onTask"
+        :teams="teams"></tb-team-section> -->
+    </app-row>
+    <app-row
+        class="board-section">
+      <app-fixed-column
+          class="team-column line-between-column"
+          v-for="team in teams"
+          :key="team.id">
+        <tb-team-list
+          :teamId="team.id"></tb-team-list>
+      </app-fixed-column>
+    </app-row>
+    <!-- When Task Clicked -->
+  </div>
 </template>
 
 <script>
   import { mapGetters } from 'vuex';
 
-  import TaskList from './TaskList';
+  import TeamList from './TeamList';
 
   export default {
+    props: ['task'],
     computed: {
       ...mapGetters({
         teams: 'teamBoardWithTaskNav/teams',
         tasks: 'teamBoardWithTaskNav/tasks',
-        teamSections: 'teamBoardWithTaskNav/teamSections',
       }),
     },
     components: {
-      tbTaskList: TaskList,
+      tbTeamList: TeamList,
+    },
+    methods: {
+      isAssigned(teamId) {
+        if (!this.task) {
+          return false;
+        }
+        console.log('working');
+        console.log('teamId: ', teamId);
+        return Object.keys(this.task.assignedTeams).indexOf(teamId) > -1;
+      },
     },
   };
 </script>
 
 <style scoped leng="scss">
+  .team-title {
+    flex-wrap: nowrap;
+    min-height: 2em;
+    vertical-align: middle;
+  }
+
+  /* .team-task {
+    height: 5em;
+  } */
+
   .board-section {
     display: flex;
     flex-wrap: nowrap;
   }
 
-  .section-wrapper {
-    background: green;
-    /* margin: 1em 0.2em 1em 0.2em; */
-    margin: 20px 10px;
-    width: calc(100% - 20px);
-  }
-
-  .section-title {
-    padding: 20px 2px;
-    width: 100%;
-  }
-
   .team-column {
     display: inline-block;
     text-align: center;
-  }
-
-  .team-column:not(:first-child) {
-    border-left: 1px solid rgba(0, 0, 0, 0.075);
   }
 </style>
